@@ -1,0 +1,45 @@
+
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Construction Work Monitoring</title>
+<style>
+body{font-family:Arial;margin:0;background:#f4f4f4}header{background:#1565c0;color:#fff;padding:15px;text-align:center}
+.container{max-width:1000px;margin:auto;padding:20px}.card{background:#fff;padding:15px;border-radius:8px;box-shadow:0 2px 6px #ccc;margin:10px 0}
+input,select{width:100%;padding:8px;margin:6px 0}button{padding:10px 16px;background:#1565c0;color:#fff;border:none;border-radius:4px;cursor:pointer}
+table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:8px}th{background:#1565c0;color:#fff}
+.stats{display:flex;gap:10px;flex-wrap:wrap}.stat{flex:1;background:#fff;padding:10px;text-align:center;border-radius:8px}
+</style></head><body>
+<header><h1>Construction Work Monitoring System</h1></header>
+<div class="container">
+<div class="stats">
+<div class="stat"><h2 id=t>0</h2>Total</div>
+<div class="stat"><h2 id=o>0</h2>Ongoing</div>
+<div class="stat"><h2 id=c>0</h2>Completed</div>
+</div>
+<div class="card">
+<h3>Add Project</h3>
+<input id=name placeholder="Project Name">
+<input id=place placeholder="Village">
+<select id=status><option>Ongoing</option><option>Completed</option></select>
+<button onclick="add()">Add Project</button>
+</div>
+<div class="card">
+<h3>Projects</h3>
+<table><thead><tr><th>Name</th><th>Village</th><th>Status</th><th>Action</th></tr></thead><tbody id=tb></tbody></table>
+</div></div>
+<script>
+let p=JSON.parse(localStorage.getItem('projects')||'[]');
+function save(){localStorage.setItem('projects',JSON.stringify(p));render();}
+function add(){
+let n=name.value.trim(),v=place.value.trim(),s=status.value;
+if(!n||!v){alert('Fill all fields');return;}
+p.push({n,v,s});name.value='';place.value='';save();}
+function del(i){p.splice(i,1);save();}
+function render(){
+tb.innerHTML='';
+let o=0,c=0;
+p.forEach((x,i)=>{if(x.s=='Ongoing')o++;else c++;
+tb.innerHTML+=`<tr><td>${x.n}</td><td>${x.v}</td><td>${x.s}</td><td><button onclick="del(${i})">Delete</button></td></tr>`});
+t.textContent=p.length;document.getElementById('o').textContent=o;document.getElementById('c').textContent=c;
+}
+render();
+</script></body></html>
